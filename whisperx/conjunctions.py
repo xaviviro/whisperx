@@ -30,7 +30,6 @@ conjunctions_by_language = {
     'ur': {'اور', 'یا', 'مگر', 'کیونکہ', 'اگرچہ', 'جبکہ', 'جب', 'کہاں', 'کس طرح', 'اگر', 'کہ', 'سے پہلے', 'کے بعد', 'جیسے ہی', 'تک', 'اگر نہیں تو', 'کے باوجود', 'اس لئے', 'جیسے', 'نہ'},
     'hi': {'और', 'या', 'पर', 'तो', 'न', 'फिर', 'हालांकि', 'चूंकि', 'अगर', 'कैसे', 'वह', 'से', 'जो', 'जहां', 'क्या', 'नजदीक', 'पहले', 'बाद', 'के', 'पार', 'माध्यम', 'तक', 'एक', 'जबकि', 'यहां', 'तक', 'दोनों', 'या', 'न', 'हालांकि'},
     'ca': {'i', 'o', 'perquè', 'malgrat', 'mentre', 'quan', 'on', 'com', 'si', 'que', 'abans', 'després', 'tan', 'fins', 'a', 'malgrat', 'doncs', 'tant', 'ja', 'perquè', 'ni', 'sino'},
-    'es': {'y', 'o', 'pero', 'porque', 'aunque', 'sin', 'mientras', 'cuando', 'donde', 'como', 'si', 'que', 'antes', 'después', 'tan', 'hasta', 'a', 'a', 'por', 'ya', 'ni', 'sino'},
     'gl': {'e', 'ou', 'pero', 'porque', 'aínda', 'mentres', 'cando', 'onde', 'como', 'se', 'que', 'antes', 'despois', 'tan', 'ata', 'a', 'aínda', 'por iso', 'xa', 'nin', 'senón'},
     'eu': {'eta', 'edo', 'baina', 'zergatik', 'nahiz', 'bitartean', 'noiz', 'non', 'nola', 'bada', 'zein', 'aurretik', 'ondoren', 'laster', 'arte', 'ez', 'beraz', 'baita', 'bai', 'ezta'},
 }
