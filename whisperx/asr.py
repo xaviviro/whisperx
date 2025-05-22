@@ -282,17 +282,51 @@ class FasterWhisperPipeline(Pipeline):
         return {"segments": segments, "language": language}
 
     def detect_language(self, audio: np.ndarray) -> str:
-        if audio.shape[0] < N_SAMPLES:
-            print("Warning: audio is shorter than 30s, language detection may be inaccurate.")
+        #if audio.shape[0] < N_SAMPLES:
+        #    print("Warning: audio is shorter than 30s, language detection may be inaccurate.")
+        # Initialize variables to track best language detection
+        languages = []
+        best_language = None
+        best_probability = 0.0
         model_n_mels = self.model.feat_kwargs.get("feature_size")
-        segment = log_mel_spectrogram(audio[: N_SAMPLES],
-                                      n_mels=model_n_mels if model_n_mels is not None else 80,
-                                      padding=0 if audio.shape[0] >= N_SAMPLES else N_SAMPLES - audio.shape[0])
-        encoder_output = self.model.encode(segment)
-        results = self.model.model.detect_language(encoder_output)
-        language_token, language_probability = results[0][0]
-        language = language_token[2:-2]
-        print(f"Detected language: {language} ({language_probability:.2f}) in first 30s of audio...")
+        n_mels = model_n_mels if model_n_mels is not None else 80
+        
+        # Process audio in chunks of N_SAMPLES (30 seconds)
+        for start_idx in range(0, len(audio), N_SAMPLES):
+            chunk = audio[start_idx:start_idx + N_SAMPLES]
+            if len(chunk) < N_SAMPLES // 2:  # Skip chunks that are less than half the window
+                continue
+            
+            segment = log_mel_spectrogram(
+            chunk,
+            n_mels=n_mels,
+            padding=0 if chunk.shape[0] >= N_SAMPLES else N_SAMPLES - chunk.shape[0]
+            )
+            encoder_output = self.model.encode(segment)
+            results = self.model.model.detect_language(encoder_output)
+            language_token, language_probability = results[0][0]
+            chunk_language = language_token[2:-2]
+            
+            languages.append(chunk_language)
+            print(f"{language_token}")
+            
+            if language_probability > best_probability:
+                best_language = chunk_language
+                best_probability = language_probability
+                if best_probability >= 0.9:
+                    break
+            
+            language_counts = {}
+            for lang in languages:
+                language_counts[lang] = language_counts.get(lang, 0) + 1
+                if language_counts[lang] > 3:
+                    best_language = lang
+                    print(f"Language {lang} detected {language_counts[lang]} times - using this as dominant language")
+                    break
+
+            
+        language = best_language
+        print(f"Detected language: {language} ({best_probability:.2f}) across audio...")
         return language
 
 
