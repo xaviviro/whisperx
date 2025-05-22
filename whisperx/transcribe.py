@@ -203,7 +203,12 @@ def cli():
     if not no_align:
         tmp_results = results
         results = []
-        align_model, align_metadata = load_align_model(align_language, device, model_name=align_model)
+        try:
+            align_model, align_metadata = load_align_model(align_language, device, model_name=align_model)
+        except Exception as e:
+            print(f"Failed to load alignment model: {e}")
+            align_model = None
+            align_metadata = None
         for result, audio_path in tmp_results:
             # >> Align
             if len(tmp_results) > 1:
@@ -216,7 +221,12 @@ def cli():
                 if result.get("language", "en") != align_metadata["language"]:
                     # load new language
                     print(f"New language found ({result['language']})! Previous was ({align_metadata['language']}), loading new alignment model for new language...")
-                    align_model, align_metadata = load_align_model(result["language"], device)
+                    try:
+                        align_model, align_metadata = load_align_model(result["language"], device)
+                    except Exception as e:
+                        print(f"Failed to load alignment model: {e}")
+                        align_model = None
+                        align_metadata = None
                 print(">>Performing alignment...")
                 result: AlignedTranscriptionResult = align(
                     result["segments"],
