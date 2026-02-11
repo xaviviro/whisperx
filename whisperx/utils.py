@@ -245,6 +245,9 @@ class SubtitlesWriter(ResultWriter):
             times: list[tuple] = []
             last = result["segments"][0]["start"]
             for segment in result["segments"]:
+                # Si no hay words, saltamos este segmento
+                if not segment.get("words"):
+                    continue
                 for i, original_timing in enumerate(segment["words"]):
                     timing = original_timing.copy()
                     long_pause = not preserve_segments

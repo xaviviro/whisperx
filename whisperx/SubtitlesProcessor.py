@@ -84,7 +84,7 @@ class SubtitlesProcessor:
                 split_points = self.determine_advanced_split_points(segment, next_segment_start_time)
                 subtitles.extend(self.generate_subtitles_from_split_points(segment, split_points, next_segment_start_time))
             else:
-                words = segment['words']
+                words = segment.get('words', [])
                 for i, word in enumerate(words):
                     if 'start' not in word or 'end' not in word:
                         self.estimate_timestamp_for_word(words, i, next_segment_start_time)

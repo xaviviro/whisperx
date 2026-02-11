@@ -375,7 +375,7 @@ def align(
     # create word_segments list
     word_segments: List[SingleWordSegment] = []
     for segment in aligned_segments:
-        word_segments += segment["words"]
+        word_segments += segment.get("words", [])
 
     return {"segments": aligned_segments, "word_segments": word_segments}
 
