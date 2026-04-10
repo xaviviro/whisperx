@@ -420,11 +420,12 @@ def get_wildcard_emission(frame_emission, tokens, blank_id):
     # Convert tokens to a tensor if they are not already
     tokens = torch.tensor(tokens) if not isinstance(tokens, torch.Tensor) else tokens
 
-    # Create a mask to identify wildcard positions
-    wildcard_mask = (tokens == -1)
+    # Create a mask to identify wildcard positions (including out-of-vocabulary tokens)
+    vocab_size = len(frame_emission)
+    wildcard_mask = (tokens == -1) | (tokens >= vocab_size)
 
     # Get scores for non-wildcard positions
-    regular_scores = frame_emission[tokens.clamp(min=0)]  # clamp to avoid -1 index
+    regular_scores = frame_emission[tokens.clamp(min=0, max=vocab_size - 1)]
 
     # Create a mask and compute the maximum value without modifying frame_emission
     max_valid_score = frame_emission.clone()   # Create a copy
