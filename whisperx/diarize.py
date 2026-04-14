@@ -11,7 +11,7 @@ from .types import TranscriptionResult, AlignedTranscriptionResult
 class DiarizationPipeline:
     def __init__(
         self,
-        model_name="pyannote/speaker-diarization-3.1",
+        model_name="pyannote/speaker-diarization-community-1",
         use_auth_token=None,
         device: Optional[Union[str, torch.device]] = "cpu",
     ):
