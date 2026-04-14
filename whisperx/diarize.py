@@ -33,9 +33,19 @@ class DiarizationPipeline:
             'sample_rate': SAMPLE_RATE
         }
         segments = self.model(audio_data, num_speakers = num_speakers, min_speakers=min_speakers, max_speakers=max_speakers)
-        diarize_df = pd.DataFrame(segments.itertracks(yield_label=True), columns=['segment', 'label', 'speaker'])
-        diarize_df['start'] = diarize_df['segment'].apply(lambda x: x.start)
-        diarize_df['end'] = diarize_df['segment'].apply(lambda x: x.end)
+        if hasattr(segments, 'itertracks'):
+            # pyannote < 4.x
+            diarize_df = pd.DataFrame(segments.itertracks(yield_label=True), columns=['segment', 'label', 'speaker'])
+            diarize_df['start'] = diarize_df['segment'].apply(lambda x: x.start)
+            diarize_df['end'] = diarize_df['segment'].apply(lambda x: x.end)
+        else:
+            # pyannote 4.x — DiarizeOutput is iterable of (speaker, start, end)
+            rows = []
+            for speaker, start, end in segments:
+                rows.append({'speaker': speaker, 'start': start, 'end': end})
+            diarize_df = pd.DataFrame(rows)
+            if diarize_df.empty:
+                diarize_df = pd.DataFrame(columns=['speaker', 'start', 'end'])
         return diarize_df
 
 
