@@ -222,6 +222,15 @@ class FasterWhisperPipeline(Pipeline):
             onset=self._vad_params["vad_onset"],
             offset=self._vad_params["vad_offset"],
         )
+        if not vad_segments:
+            # Newer transformers pipelines crash on inputs[0] when given an
+            # empty generator. Short-circuit when VAD finds no speech and
+            # return an empty result.
+            print("No active speech found in audio")
+            empty_lang = language
+            if empty_lang is None and self.tokenizer is not None:
+                empty_lang = self.tokenizer.language_code
+            return {"segments": [], "language": empty_lang}
         if self.tokenizer is None:
             language = language or self.detect_language(audio)
             task = task or "transcribe"
