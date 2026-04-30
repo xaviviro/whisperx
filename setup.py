@@ -32,7 +32,7 @@ setup(
     url="https://github.com/m-bain/whisperx",
     license="BSD-2-Clause",
     packages=find_packages(exclude=["tests*"]),
-    install_requires=_read_requirements() + ["pyannote.audio==3.3.2"],
+    install_requires=_read_requirements() + ["pyannote.audio>=4.0"],
     entry_points={
         "console_scripts": ["whisperx=whisperx.transcribe:cli"],
     },
